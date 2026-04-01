@@ -65,6 +65,7 @@ async function sendEmail(payload) {
     host: requiredEnv("SMTP_HOST"),
     port: Number(process.env.SMTP_PORT || 587),
     secure: String(process.env.SMTP_SECURE || "false") === "true",
+    family: 4,
     auth: {
       user: requiredEnv("SMTP_USER"),
       pass: requiredEnv("SMTP_PASS"),
