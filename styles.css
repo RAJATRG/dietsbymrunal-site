@@ -102,8 +102,22 @@ h3 {
 }
 
 .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
   font-size: 2rem;
   font-weight: 700;
+}
+
+.brand-logo {
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.brand-text {
+  display: inline-block;
 }
 
 .site-nav {
@@ -115,6 +129,12 @@ h3 {
 .site-nav a {
   color: var(--muted);
   font-weight: 700;
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+.site-nav a:hover {
+  color: var(--green);
+  transform: translateY(-1px);
 }
 
 .hero-section {
@@ -188,7 +208,7 @@ h3 {
   font: inherit;
   font-weight: 800;
   cursor: pointer;
-  transition: transform 180ms ease, box-shadow 180ms ease;
+  transition: transform 220ms ease, box-shadow 220ms ease, filter 220ms ease;
 }
 
 .button:hover,
@@ -196,6 +216,13 @@ h3 {
 .connect-card:hover,
 .floating-book:hover {
   transform: translateY(-2px);
+}
+
+.button:active,
+.social-link:active,
+.connect-card:active,
+.floating-book:active {
+  transform: translateY(0) scale(0.99);
 }
 
 .button-primary {
@@ -233,6 +260,7 @@ h3 {
 .metric-card {
   padding: 18px;
   border-radius: 24px;
+  transition: transform 220ms ease, box-shadow 220ms ease;
 }
 
 .metric-card strong,
@@ -245,6 +273,13 @@ h3 {
 
 .metric-card strong {
   font-size: 1rem;
+}
+
+.metric-card:hover,
+.feature-card:hover,
+.condition-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 28px 70px rgba(32, 78, 138, 0.16);
 }
 
 .hero-visual {
@@ -392,6 +427,7 @@ h3 {
   border: 1px solid rgba(255, 255, 255, 0.86);
   border-radius: 26px;
   box-shadow: var(--shadow);
+  transition: transform 240ms ease, box-shadow 240ms ease;
 }
 
 .condition-card img {
@@ -439,6 +475,7 @@ h3 {
 .feature-card {
   padding: 20px;
   border-radius: 24px;
+  transition: transform 220ms ease, box-shadow 220ms ease;
 }
 
 .booking-hero {
@@ -781,26 +818,34 @@ h3 {
 }
 
 .reveal {
-  animation: riseFade 700ms ease both;
+  opacity: 0;
+  transform: translateY(26px);
+  transition:
+    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--delay, 0ms);
+  will-change: opacity, transform;
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.reveal-pop {
+  transform: translateY(24px) scale(0.94);
+}
+
+.reveal-drop {
+  transform: translateY(-18px) scale(0.98);
 }
 
 .rise {
-  animation-delay: 100ms;
+  --delay: 100ms;
 }
 
 .float-in {
-  animation-delay: 220ms;
-}
-
-@keyframes riseFade {
-  from {
-    opacity: 0;
-    transform: translateY(26px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  --delay: 220ms;
 }
 
 @keyframes floatCard {
@@ -858,28 +903,84 @@ h3 {
   .hero-visual {
     min-height: auto;
   }
+
+  .hero-copy,
+  .connect-panel,
+  .form-panel,
+  .about-copy {
+    max-width: 100%;
+  }
 }
 
 @media (max-width: 760px) {
   .page-shell {
     width: min(100% - 18px, 1240px);
+    padding-top: 14px;
   }
 
   .site-header {
     position: static;
     padding: 14px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    border-radius: 20px;
   }
 
   .brand {
     font-size: 1.6rem;
   }
 
+  .brand-logo {
+    width: 46px;
+    height: 46px;
+  }
+
+  .site-nav {
+    width: 100%;
+    gap: 10px;
+    justify-content: space-between;
+  }
+
+  .site-nav a {
+    font-size: 0.92rem;
+  }
+
   h1 {
     font-size: 3rem;
+    line-height: 1;
+  }
+
+  h2 {
+    font-size: 2.2rem;
+  }
+
+  .hero-section {
+    gap: 22px;
+    padding-top: 8px;
+  }
+
+  .hero-text,
+  .intro-text,
+  .about-copy p {
+    font-size: 0.98rem;
+    line-height: 1.72;
   }
 
   .hero-visual {
     min-height: auto;
+  }
+
+  .hero-visual-grid {
+    gap: 18px;
+    min-height: auto;
+  }
+
+  .portrait-shell {
+    transform: none;
+  }
+
+  .portrait-panel {
+    border-radius: 28px;
   }
 
   .profile-card,
@@ -910,5 +1011,93 @@ h3 {
   .food-mini-bottom {
     left: 8px;
     bottom: 12px;
+  }
+
+  .condition-card img {
+    aspect-ratio: 1.4 / 1;
+  }
+
+  .booking-form {
+    border-radius: 28px;
+  }
+
+  .button-large,
+  .button-secondary {
+    width: 100%;
+  }
+
+  .hero-actions {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .bottom-links {
+    gap: 10px;
+  }
+
+  .social-link {
+    width: 100%;
+  }
+
+  .floating-book {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+    width: auto;
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-shell {
+    width: min(100% - 14px, 1240px);
+  }
+
+  h1 {
+    font-size: 2.5rem;
+  }
+
+  h2 {
+    font-size: 1.95rem;
+  }
+
+  h3 {
+    font-size: 1.6rem;
+  }
+
+  .metric-card,
+  .feature-card,
+  .condition-body,
+  .booking-form,
+  .profile-card,
+  .connect-card,
+  .availability-note,
+  .about-band {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .consult-pill {
+    width: calc(100% - 32px);
+    text-align: center;
+    font-size: 0.85rem;
+  }
+
+  .brand {
+    gap: 10px;
+  }
+
+  .brand-text {
+    font-size: 1.3rem;
+  }
+
+  .icon-badge {
+    width: 50px;
+    height: 50px;
+  }
+
+  .icon-svg {
+    width: 24px;
+    height: 24px;
   }
 }
