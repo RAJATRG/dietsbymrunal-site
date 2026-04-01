@@ -1,4 +1,5 @@
 const express = require("express");
+const dns = require("dns").promises;
 const path = require("path");
 const nodemailer = require("nodemailer");
 require("dotenv").config();
@@ -61,11 +62,21 @@ function buildConsultationText(payload) {
 async function sendEmail(payload) {
   assertRealSmtpConfig();
 
+  const smtpHost = requiredEnv("SMTP_HOST");
+  const ipv4Addresses = await dns.resolve4(smtpHost);
+
+  if (!ipv4Addresses || ipv4Addresses.length === 0) {
+    throw new Error(`Could not resolve an IPv4 address for ${smtpHost}.`);
+  }
+
   const transporter = nodemailer.createTransport({
-    host: requiredEnv("SMTP_HOST"),
+    host: ipv4Addresses[0],
     port: Number(process.env.SMTP_PORT || 587),
     secure: String(process.env.SMTP_SECURE || "false") === "true",
     family: 4,
+    tls: {
+      servername: smtpHost,
+    },
     auth: {
       user: requiredEnv("SMTP_USER"),
       pass: requiredEnv("SMTP_PASS"),

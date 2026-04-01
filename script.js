@@ -1,6 +1,6 @@
 const contactConfig = {
   practiceName: "Diets by Mrunal",
-  email: "rajatgovekar@gmail.com",
+  email: "mrunalkudalkar2024@gmail.com",
   whatsappNumber: "919284919297",
   whatsappDisplay: "+91 92849 19297",
   instagramUrl: "https://www.instagram.com/dietsbymrunal/",
