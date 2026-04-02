@@ -1,7 +1,6 @@
 const express = require("express");
-const dns = require("dns").promises;
+const https = require("https");
 const path = require("path");
-const nodemailer = require("nodemailer");
 require("dotenv").config();
 
 const app = express();
@@ -20,21 +19,23 @@ function requiredEnv(name) {
   return value;
 }
 
-function assertRealSmtpConfig() {
-  const user = requiredEnv("SMTP_USER");
-  const pass = requiredEnv("SMTP_PASS");
-  const to = process.env.CONTACT_TO_EMAIL || user;
-
-  if (
-    user === "your-gmail@gmail.com" ||
-    pass === "your-gmail-app-password" ||
-    to === "your-gmail@gmail.com"
-  ) {
-    throw new Error(
-      "SMTP is not configured yet. Replace the placeholder Gmail and App Password values in the .env file."
-    );
-  }
-}
+// function assertRealResendConfig() {
+//   const apiKey = requiredEnv("RESEND_API_KEY");
+//   const from = requiredEnv("RESEND_FROM_EMAIL");
+//   const to = requiredEnv("RESEND_TO_EMAIL");
+//   console.log(apiKey);
+//   console.log(from)
+//   console.log(to)
+//   if (
+//     apiKey !== "re_N6HuARLq_KZEjSRh5hyqARDvMDrWfESLb" ||
+//     from !== "hello@dietsbymrunal.in" ||
+//     to !== "rajatgovekar@gmail.com"
+//   ) {
+//     throw new Error(
+//       "Resend is not configured yet. Replace the placeholder Resend values in the .env file."
+//     );
+//   }
+// }
 
 function escapeHtml(value) {
   return String(value)
@@ -60,33 +61,14 @@ function buildConsultationText(payload) {
 }
 
 async function sendEmail(payload) {
-  assertRealSmtpConfig();
+  // assertRealResendConfig();
 
-  const smtpHost = requiredEnv("SMTP_HOST");
-  const ipv4Addresses = await dns.resolve4(smtpHost);
-
-  if (!ipv4Addresses || ipv4Addresses.length === 0) {
-    throw new Error(`Could not resolve an IPv4 address for ${smtpHost}.`);
-  }
-
-  const transporter = nodemailer.createTransport({
-    host: ipv4Addresses[0],
-    port: Number(process.env.SMTP_PORT || 587),
-    secure: String(process.env.SMTP_SECURE || "false") === "true",
-    family: 4,
-    tls: {
-      servername: smtpHost,
-    },
-    auth: {
-      user: requiredEnv("SMTP_USER"),
-      pass: requiredEnv("SMTP_PASS"),
-    },
-  });
-
-  await transporter.sendMail({
-    from: process.env.SMTP_FROM || requiredEnv("SMTP_USER"),
-    to: process.env.CONTACT_TO_EMAIL || requiredEnv("SMTP_USER"),
-    replyTo: payload.email,
+  const requestBody = JSON.stringify({
+    from: process.env.RESEND_FROM_LABEL
+      ? `${process.env.RESEND_FROM_LABEL} <${requiredEnv("RESEND_FROM_EMAIL")}>`
+      : requiredEnv("RESEND_FROM_EMAIL"),
+    to: [requiredEnv("RESEND_TO_EMAIL")],
+    cc: process.env.RESEND_CC_EMAIL ? [process.env.RESEND_CC_EMAIL] : undefined,
     subject: `New consultation enquiry for ${payload.practiceName || "Diets by Mrunal"}`,
     text: buildConsultationText(payload),
     html: `
@@ -97,6 +79,47 @@ async function sendEmail(payload) {
       <p><strong>Focus:</strong> ${escapeHtml(payload.focus)}</p>
       <p><strong>Message:</strong><br />${escapeHtml(payload.message).replace(/\n/g, "<br />")}</p>
     `,
+    replyTo: payload.email,
+  });
+
+  await new Promise((resolve, reject) => {
+    const request = https.request(
+      {
+        hostname: "api.resend.com",
+        path: "/emails",
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${requiredEnv("RESEND_API_KEY")}`,
+          "Content-Type": "application/json",
+          "Content-Length": Buffer.byteLength(requestBody),
+          "User-Agent": "dietsbymrunal-site/1.0",
+        },
+      },
+      (response) => {
+        let raw = "";
+
+        response.on("data", (chunk) => {
+          raw += chunk;
+        });
+
+        response.on("end", () => {
+          if (response.statusCode >= 200 && response.statusCode < 300) {
+            resolve(raw);
+            return;
+          }
+
+          reject(
+            new Error(
+              `Resend API request failed with status ${response.statusCode}: ${raw}`
+            )
+          );
+        });
+      }
+    );
+
+    request.on("error", reject);
+    request.write(requestBody);
+    request.end();
   });
 }
 
