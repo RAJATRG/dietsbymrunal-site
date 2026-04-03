@@ -124,21 +124,6 @@
               <a class="button button-primary" href="#booking">Book Free Consultation</a>
               <a class="button button-secondary" href="#specialities">Explore Expertise</a>
             </div>
-
-            <div class="hero-metrics">
-              <div class="metric-card reveal reveal-pop" style="--delay: 80ms;">
-                <strong>PCOD / PCOS</strong>
-                <span>Hormone-supportive meal planning</span>
-              </div>
-              <div class="metric-card reveal reveal-pop" style="--delay: 160ms;">
-                <strong>CKD & Liver Care</strong>
-                <span>Condition-aware therapeutic diets</span>
-              </div>
-              <div class="metric-card reveal reveal-pop" style="--delay: 240ms;">
-                <strong>Weight Management</strong>
-                <span>Real food. Real consistency. No crash diets.</span>
-              </div>
-            </div>
           </div>
 
           <div class="hero-visual reveal float-in">
@@ -173,18 +158,56 @@
           </div>
         </section>
 
-        <section class="speciality-strip reveal" id="specialities">
-          <article>PCOD / PCOS</article>
-          <article>Obesity & Weight Loss</article>
-          <article>CKD Nutrition</article>
-          <article>Liver Cirrhosis Diet</article>
-          <article>Therapeutic Meal Planning</article>
-          <article>Respiratory Disorders / COPD</article>
-          <article>Osteoporosis</article>
-          <article>Post Cancer Recovery Diets</article>
-          <article>IBS / IBD / GERD / Ulcer</article>
-          <article>Thyroid Nutrition</article>
-          <article>Hyperlipidemia</article>
+        <section class="speciality-tabs reveal" id="specialities">
+          <div class="section-copy">
+            <p class="eyebrow">Areas of Expertise</p>
+            <h2>Choose the support area that fits your goals</h2>
+            <p>
+              Explore focused clinical nutrition plans or practical lifestyle
+              management guidance based on what you need help with right now.
+            </p>
+          </div>
+
+          <div class="speciality-switch" role="tablist" aria-label="Expertise categories">
+            <button
+              class="speciality-toggle is-active"
+              type="button"
+              role="tab"
+              aria-selected="true"
+              data-speciality-tab="clinical"
+            >
+              Clinical Nutrition
+            </button>
+            <button
+              class="speciality-toggle"
+              type="button"
+              role="tab"
+              aria-selected="false"
+              data-speciality-tab="lifestyle"
+            >
+              Lifestyle Management
+            </button>
+          </div>
+
+          <div class="speciality-panel">
+            <div class="speciality-columns">
+              <div>
+                <p class="speciality-label">Category</p>
+                <h3 class="speciality-heading" id="speciality-heading">
+                  Clinical Nutrition
+                </h3>
+                <p class="speciality-description" id="speciality-description">
+                  Therapeutic nutrition plans tailored to diagnosis, recovery,
+                  and condition-specific care.
+                </p>
+              </div>
+
+              <div>
+                <p class="speciality-label">Plans Covered</p>
+                <div class="speciality-list" id="speciality-list"></div>
+              </div>
+            </div>
+          </div>
         </section>
 
         <section class="condition-gallery reveal">
@@ -260,11 +283,11 @@
             </article>
             <article class="condition-card reveal reveal-drop" style="--delay: 540ms;">
               <img
-                src="https://commons.wikimedia.org/wiki/Special:FilePath/Breast%20cancer%20survivor%20shows%20strength%20through%20adversity%20%286374898%29.jpg"
+                src="./assets/restorative-nutrition-plan.png"
                 alt="Illustration representing post cancer recovery diets"
               />
               <div class="condition-body">
-                <strong>Post Cancer Recovery Diets</strong>
+                <strong>Restorative Nutrition Plan</strong>
                 <span>Supportive nutrition for healing, appetite improvement, strength, and energy restoration.</span>
               </div>
             </article>
@@ -493,21 +516,18 @@
               </label>
 
               <label>
-                Health Goal / Condition *
-                <select name="focus" required>
-                  <option value="">- What do you need help with? -</option>
-                  <option>PCOD / PCOS</option>
-                  <option>Obesity / Weight Loss</option>
-                  <option>CKD Diet</option>
-                  <option>Liver Cirrhosis Diet</option>
-                  <option>Respiratory Disorders / COPD</option>
-                  <option>Osteoporosis</option>
-                  <option>Post Cancer Recovery Diets</option>
-                  <option>Gastrointestinal Disorders / IBS / IBD / GERD / Ulcer</option>
-                  <option>Thyroid</option>
-                  <option>Hyperlipidemia</option>
-                  <option>General Wellness</option>
-                  <option>Therapeutic Diet Planning</option>
+                Consultation Type *
+                <select name="category" id="consultation-category" required>
+                  <option value="">- Select consultation type -</option>
+                  <option value="Clinical Nutrition">Clinical Nutrition</option>
+                  <option value="Lifestyle Management">Lifestyle Management</option>
+                </select>
+              </label>
+
+              <label>
+                Plan / Focus Area *
+                <select name="focus" id="consultation-focus" required disabled>
+                  <option value="">- Select consultation type first -</option>
                 </select>
               </label>
 

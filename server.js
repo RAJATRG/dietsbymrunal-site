@@ -53,7 +53,8 @@ function buildConsultationText(payload) {
     `Name: ${payload.name}`,
     `Phone: ${payload.phone}`,
     `Email: ${payload.email}`,
-    `Focus: ${payload.focus}`,
+    `Consultation Type: ${payload.category}`,
+    `Plan / Focus: ${payload.focus}`,
     "",
     "Message:",
     payload.message,
@@ -76,7 +77,8 @@ async function sendEmail(payload) {
       <p><strong>Name:</strong> ${escapeHtml(payload.name)}</p>
       <p><strong>Phone:</strong> ${escapeHtml(payload.phone)}</p>
       <p><strong>Email:</strong> ${escapeHtml(payload.email)}</p>
-      <p><strong>Focus:</strong> ${escapeHtml(payload.focus)}</p>
+      <p><strong>Consultation Type:</strong> ${escapeHtml(payload.category)}</p>
+      <p><strong>Plan / Focus:</strong> ${escapeHtml(payload.focus)}</p>
       <p><strong>Message:</strong><br />${escapeHtml(payload.message).replace(/\n/g, "<br />")}</p>
     `,
     replyTo: payload.email,
@@ -129,11 +131,19 @@ app.post("/api/contact", async (req, res) => {
     name: String(req.body.name || "").trim(),
     phone: String(req.body.phone || "").trim(),
     email: String(req.body.email || "").trim(),
+    category: String(req.body.category || "").trim(),
     focus: String(req.body.focus || "").trim(),
     message: String(req.body.message || "").trim(),
   };
 
-  if (!payload.name || !payload.phone || !payload.email || !payload.focus || !payload.message) {
+  if (
+    !payload.name ||
+    !payload.phone ||
+    !payload.email ||
+    !payload.category ||
+    !payload.focus ||
+    !payload.message
+  ) {
     res.status(400).json({ ok: false, error: "Missing required form fields." });
     return;
   }

@@ -145,6 +145,10 @@ h3 {
   padding: 22px 0 34px;
 }
 
+.hero-copy {
+  align-self: center;
+}
+
 .eyebrow {
   margin: 0 0 10px;
   color: var(--green);
@@ -249,9 +253,10 @@ h3 {
 .connect-card,
 .availability-note,
 .booking-form,
-.speciality-strip article,
 .profile-card,
-.about-band {
+.about-band,
+.speciality-panel,
+.speciality-item {
   background: var(--surface);
   border: 1px solid rgba(255, 255, 255, 0.86);
   box-shadow: var(--shadow);
@@ -284,7 +289,7 @@ h3 {
 
 .hero-visual {
   position: relative;
-  min-height: 700px;
+  min-height: 640px;
 }
 
 .hero-visual-grid {
@@ -292,7 +297,7 @@ h3 {
   grid-template-columns: minmax(0, 1fr) minmax(0, 0.88fr);
   gap: 22px;
   align-items: center;
-  min-height: 700px;
+  min-height: 640px;
 }
 
 .portrait-shell {
@@ -387,18 +392,94 @@ h3 {
   animation-delay: 0.5s;
 }
 
-.speciality-strip {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 14px;
+.speciality-tabs {
   padding: 18px 0 36px;
 }
 
-.speciality-strip article {
-  padding: 16px;
-  border-radius: 18px;
-  text-align: center;
+.speciality-switch {
+  display: inline-flex;
+  gap: 10px;
+  padding: 8px;
+  margin-bottom: 20px;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+}
+
+.speciality-toggle {
+  min-height: 52px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 16px;
+  font: inherit;
   font-weight: 800;
+  color: var(--muted);
+  background: transparent;
+  cursor: pointer;
+  transition: transform 180ms ease, color 180ms ease, background 180ms ease, box-shadow 180ms ease;
+}
+
+.speciality-toggle:hover {
+  color: var(--green);
+}
+
+.speciality-toggle.is-active {
+  color: #fff;
+  background: linear-gradient(180deg, var(--green), var(--green-dark));
+  box-shadow: 0 16px 28px rgba(47, 110, 203, 0.22);
+}
+
+.speciality-panel {
+  padding: 26px;
+  border-radius: 30px;
+}
+
+.speciality-columns {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  gap: 26px;
+  align-items: start;
+}
+
+.speciality-label {
+  margin: 0 0 10px;
+  color: var(--green);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.speciality-heading {
+  margin-bottom: 10px;
+  font-size: clamp(1.6rem, 2.8vw, 2.4rem);
+}
+
+.speciality-description {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.8;
+  max-width: 30rem;
+}
+
+.speciality-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.speciality-item {
+  padding: 18px 20px;
+  border-radius: 22px;
+  font-weight: 800;
+  line-height: 1.45;
+  transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.speciality-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 22px 50px rgba(32, 78, 138, 0.14);
 }
 
 .condition-gallery {
@@ -675,6 +756,12 @@ h3 {
   background: #fff;
 }
 
+.booking-form select:disabled {
+  color: #8b9ab0;
+  background: #f3f7fd;
+  cursor: not-allowed;
+}
+
 .booking-form input:focus,
 .booking-form select:focus,
 .booking-form textarea:focus {
@@ -928,11 +1015,15 @@ h3 {
   .about-band,
   .booking-hero,
   .feature-list,
-  .speciality-strip,
   .hero-metrics,
   .hero-visual-grid,
   .condition-grid,
   .faq-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .speciality-columns,
+  .speciality-list {
     grid-template-columns: 1fr;
   }
 
@@ -1022,6 +1113,16 @@ h3 {
   .profile-card,
   .connect-card {
     grid-template-columns: 1fr;
+  }
+
+  .speciality-switch {
+    display: grid;
+    grid-template-columns: 1fr;
+    width: 100%;
+  }
+
+  .speciality-toggle {
+    width: 100%;
   }
 
   .profile-photo {
