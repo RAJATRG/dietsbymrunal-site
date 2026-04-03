@@ -50,8 +50,10 @@ const specialityToggles = document.querySelectorAll("[data-speciality-tab]");
 const specialityHeading = document.getElementById("speciality-heading");
 const specialityDescription = document.getElementById("speciality-description");
 const specialityList = document.getElementById("speciality-list");
+const specialityPanel = document.querySelector(".speciality-panel");
 const categorySelect = document.getElementById("consultation-category");
 const focusSelect = document.getElementById("consultation-focus");
+let activeSpecialityTab = "clinical";
 
 emailLink.href = `mailto:${contactConfig.email}`;
 emailLink.querySelector("strong").textContent = contactConfig.email;
@@ -106,6 +108,8 @@ function renderSpecialityTab(tabKey) {
     toggle.classList.toggle("is-active", isActive);
     toggle.setAttribute("aria-selected", String(isActive));
   });
+
+  activeSpecialityTab = tabKey;
 }
 
 function populateFocusOptions(category) {
@@ -141,7 +145,18 @@ populateFocusOptions(categorySelect.value);
 
 specialityToggles.forEach((toggle) => {
   toggle.addEventListener("click", () => {
-    renderSpecialityTab(toggle.dataset.specialityTab);
+    const nextTab = toggle.dataset.specialityTab;
+
+    if (nextTab === activeSpecialityTab) {
+      return;
+    }
+
+    specialityPanel.classList.add("is-switching");
+
+    window.setTimeout(() => {
+      renderSpecialityTab(nextTab);
+      specialityPanel.classList.remove("is-switching");
+    }, 180);
   });
 });
 
