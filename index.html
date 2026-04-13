@@ -110,8 +110,8 @@
           <div class="hero-copy reveal rise">
             <p class="eyebrow">Clinical Nutritionist & Diet Consultant</p>
             <h1>
-              Best Dietician & Lifestyle Nutritionist in Goa for Hormone
-              Balance, Metabolic Health, and Sustainable Weight Care
+              One of Goa's leading dieticians for hormone balance, metabolic
+              health, and sustainable weight care
             </h1>
             <p class="hero-text">
               Mrunal Kudalkar helps clients across Goa with PCOD / PCOS,
@@ -492,7 +492,13 @@
 
               <label>
                 Full Name *
-                <input type="text" name="name" placeholder="Your full name" required />
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Your full name"
+                  minlength="2"
+                  required
+                />
               </label>
 
               <label>
@@ -501,6 +507,9 @@
                   type="tel"
                   name="phone"
                   placeholder="+91 XXXXX XXXXX"
+                  inputmode="numeric"
+                  minlength="10"
+                  maxlength="14"
                   required
                 />
               </label>
@@ -511,6 +520,7 @@
                   type="email"
                   name="email"
                   placeholder="your@email.com"
+                  pattern="^[^\\s@]+@[^\\s@]+\\.[^\\s@]{2,}$"
                   required
                 />
               </label>

@@ -67,6 +67,7 @@ linkedinLink.href = contactConfig.linkedinUrl;
 const hasValidConfig =
   !contactConfig.email.includes("yourgmail") &&
   !contactConfig.whatsappNumber.includes("000000");
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 
 function getCategoryKey(value) {
   if (value === "Clinical Nutrition") {
@@ -140,6 +141,30 @@ function populateFocusOptions(category) {
   });
 }
 
+function validateConsultationPayload(payload) {
+  const name = payload.name.trim();
+  const phoneDigits = payload.phone.replace(/\D/g, "");
+  const email = payload.email.trim();
+
+  if (!name) {
+    return "Please enter your name.";
+  }
+
+  if (name.length < 2) {
+    return "Name should be at least 2 characters.";
+  }
+
+  if (phoneDigits.length < 10 || phoneDigits.length > 12) {
+    return "Phone number should be 10 to 12 digits.";
+  }
+
+  if (!emailRegex.test(email)) {
+    return "Please enter a valid email address like name@domain.com.";
+  }
+
+  return "";
+}
+
 renderSpecialityTab("clinical");
 populateFocusOptions(categorySelect.value);
 
@@ -196,13 +221,20 @@ form.addEventListener("submit", async (event) => {
 
   const formData = new FormData(form);
   const payload = {
-    name: formData.get("name"),
-    phone: formData.get("phone"),
-    email: formData.get("email"),
-    category: formData.get("category"),
-    focus: formData.get("focus"),
-    message: formData.get("message"),
+    name: String(formData.get("name") || "").trim(),
+    phone: String(formData.get("phone") || "").trim(),
+    email: String(formData.get("email") || "").trim(),
+    category: String(formData.get("category") || "").trim(),
+    focus: String(formData.get("focus") || "").trim(),
+    message: String(formData.get("message") || "").trim(),
   };
+
+  const validationError = validateConsultationPayload(payload);
+
+  if (validationError) {
+    statusText.textContent = validationError;
+    return;
+  }
 
   statusText.textContent = "Sending your request...";
 
