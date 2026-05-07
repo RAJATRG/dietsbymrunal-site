@@ -67,7 +67,6 @@ linkedinLink.href = contactConfig.linkedinUrl;
 const hasValidConfig =
   !contactConfig.email.includes("yourgmail") &&
   !contactConfig.whatsappNumber.includes("000000");
-const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i;
 
 function getCategoryKey(value) {
   if (value === "Clinical Nutrition") {
@@ -143,8 +142,6 @@ function populateFocusOptions(category) {
 
 function validateConsultationPayload(payload) {
   const name = payload.name.trim();
-  const phoneDigits = payload.phone.replace(/\D/g, "");
-  const email = payload.email.trim();
 
   if (!name) {
     return "Please enter your name.";
@@ -152,14 +149,6 @@ function validateConsultationPayload(payload) {
 
   if (name.length < 2) {
     return "Name should be at least 2 characters.";
-  }
-
-  if (phoneDigits.length < 10 || phoneDigits.length > 12) {
-    return "Phone number should be 10 to 12 digits.";
-  }
-
-  if (!emailRegex.test(email)) {
-    return "Please enter a valid email address like name@domain.com.";
   }
 
   return "";
