@@ -9,6 +9,10 @@ const port = process.env.PORT || 3000;
 app.use(express.json());
 app.use(express.static(__dirname));
 
+app.get("/index.html", (req, res) => {
+  res.redirect(301, "/");
+});
+
 function requiredEnv(name) {
   const value = process.env[name];
 
