@@ -53,6 +53,9 @@ const specialityList = document.getElementById("speciality-list");
 const specialityPanel = document.querySelector(".speciality-panel");
 const categorySelect = document.getElementById("consultation-category");
 const focusSelect = document.getElementById("consultation-focus");
+const interactiveCards = document.querySelectorAll(
+  ".condition-card, .feature-card, .connect-card, .speciality-item, .faq-card"
+);
 let activeSpecialityTab = "clinical";
 
 emailLink.href = `mailto:${contactConfig.email}`;
@@ -170,12 +173,20 @@ specialityToggles.forEach((toggle) => {
     window.setTimeout(() => {
       renderSpecialityTab(nextTab);
       specialityPanel.classList.remove("is-switching");
-    }, 180);
+    }, 260);
   });
 });
 
 categorySelect.addEventListener("change", () => {
   populateFocusOptions(categorySelect.value);
+});
+
+interactiveCards.forEach((card) => {
+  card.addEventListener("pointermove", (event) => {
+    const rect = card.getBoundingClientRect();
+    card.style.setProperty("--x", `${event.clientX - rect.left}px`);
+    card.style.setProperty("--y", `${event.clientY - rect.top}px`);
+  });
 });
 
 if ("IntersectionObserver" in window) {

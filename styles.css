@@ -75,6 +75,7 @@ img {
   width: min(1240px, calc(100% - 32px));
   margin: 0 auto;
   padding: 24px 0 48px;
+  animation: pageBloom 760ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .site-header {
@@ -92,6 +93,7 @@ img {
   top: 14px;
   z-index: 30;
   backdrop-filter: blur(16px);
+  animation: headerDrop 640ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .brand,
@@ -114,6 +116,11 @@ h3 {
   height: 58px;
   object-fit: contain;
   flex: 0 0 auto;
+  transition: transform 260ms ease;
+}
+
+.brand:hover .brand-logo {
+  transform: rotate(-3deg) scale(1.05);
 }
 
 .brand-text {
@@ -204,9 +211,11 @@ h3 {
 }
 
 .button {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
   border: 0;
   border-radius: 18px;
   font: inherit;
@@ -215,11 +224,25 @@ h3 {
   transition: transform 220ms ease, box-shadow 220ms ease, filter 220ms ease;
 }
 
+.button::after {
+  content: "";
+  position: absolute;
+  inset: -120% auto -120% -45%;
+  width: 42%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+  transform: translateX(-120%) rotate(18deg);
+  transition: transform 680ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 .button:hover,
 .social-link:hover,
 .connect-card:hover,
 .floating-book:hover {
-  transform: translateY(-2px);
+  transform: translateY(-5px) scale(1.02);
+}
+
+.button:hover::after {
+  transform: translateX(420%) rotate(18deg);
 }
 
 .button:active,
@@ -233,6 +256,11 @@ h3 {
   color: #fff;
   background: linear-gradient(180deg, var(--green), var(--green-dark));
   box-shadow: 0 18px 28px rgba(63, 126, 74, 0.24);
+}
+
+.button-primary:hover,
+.floating-book:hover {
+  box-shadow: 0 24px 42px rgba(47, 110, 203, 0.3);
 }
 
 .button-secondary {
@@ -283,7 +311,7 @@ h3 {
 .metric-card:hover,
 .feature-card:hover,
 .condition-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-8px) scale(1.015);
   box-shadow: 0 28px 70px rgba(32, 78, 138, 0.16);
 }
 
@@ -354,6 +382,11 @@ h3 {
   height: 100%;
   object-fit: cover;
   transform: scale(1.05);
+  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.food-panel:hover img {
+  transform: scale(1.11);
 }
 
 .food-panel-main {
@@ -422,12 +455,14 @@ h3 {
 
 .speciality-toggle:hover {
   color: var(--green);
+  transform: translateY(-1px);
 }
 
 .speciality-toggle.is-active {
   color: #fff;
   background: linear-gradient(180deg, var(--green), var(--green-dark));
   box-shadow: 0 16px 28px rgba(47, 110, 203, 0.22);
+  animation: activeTabPulse 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
 .speciality-panel {
@@ -441,8 +476,8 @@ h3 {
 }
 
 .speciality-panel.is-switching {
-  opacity: 0.38;
-  transform: translateY(10px) scale(0.985);
+  opacity: 0;
+  transform: translateY(18px) scale(0.96);
 }
 
 .speciality-columns {
@@ -480,17 +515,19 @@ h3 {
 }
 
 .speciality-item {
+  position: relative;
+  overflow: hidden;
   padding: 18px 20px;
   border-radius: 22px;
   font-weight: 800;
   line-height: 1.45;
-  transition: transform 180ms ease, box-shadow 180ms ease;
-  animation: specialityPop 560ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  transition: transform 220ms ease, box-shadow 220ms ease;
+  animation: specialityPop 720ms cubic-bezier(0.16, 1, 0.3, 1) both;
   animation-delay: var(--delay, 0ms);
 }
 
 .speciality-item:hover {
-  transform: translateY(-3px);
+  transform: translateY(-7px) scale(1.025);
   box-shadow: 0 22px 50px rgba(32, 78, 138, 0.14);
 }
 
@@ -520,6 +557,7 @@ h3 {
 }
 
 .condition-card {
+  position: relative;
   overflow: hidden;
   background: var(--surface);
   border: 1px solid rgba(255, 255, 255, 0.86);
@@ -528,14 +566,44 @@ h3 {
   transition: transform 240ms ease, box-shadow 240ms ease;
 }
 
+.condition-card::before,
+.feature-card::before,
+.connect-card::before,
+.speciality-item::before,
+.faq-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(142, 197, 255, 0.28), transparent 34%);
+  transition: opacity 220ms ease;
+}
+
+.condition-card:hover::before,
+.feature-card:hover::before,
+.connect-card:hover::before,
+.speciality-item:hover::before,
+.faq-card:hover::before {
+  opacity: 1;
+}
+
 .condition-card img {
   width: 100%;
   aspect-ratio: 1.08 / 1;
   object-fit: cover;
   background: linear-gradient(180deg, #eff5ff, #ffffff);
+  transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1), filter 520ms ease;
+}
+
+.condition-card:hover img {
+  filter: saturate(1.08) contrast(1.03);
+  transform: scale(1.055);
 }
 
 .condition-body {
+  position: relative;
+  z-index: 1;
   padding: 18px;
 }
 
@@ -561,6 +629,8 @@ h3 {
 }
 
 .faq-card {
+  position: relative;
+  overflow: hidden;
   padding: 20px;
   background: var(--surface);
   border: 1px solid rgba(255, 255, 255, 0.86);
@@ -606,6 +676,8 @@ h3 {
 }
 
 .feature-card {
+  position: relative;
+  overflow: hidden;
   padding: 20px;
   border-radius: 24px;
   transition: transform 220ms ease, box-shadow 220ms ease;
@@ -660,6 +732,8 @@ h3 {
 }
 
 .connect-card {
+  position: relative;
+  overflow: hidden;
   display: grid;
   grid-template-columns: 56px 1fr;
   gap: 16px;
@@ -671,6 +745,11 @@ h3 {
 
 .connect-card:hover {
   border-color: rgba(63, 126, 74, 0.36);
+}
+
+.connect-card:hover .icon-badge,
+.social-link:hover .social-icon {
+  transform: scale(1.08) rotate(-2deg);
 }
 
 .active-card {
@@ -685,6 +764,7 @@ h3 {
   border-radius: 16px;
   background: var(--green-soft);
   color: var(--green);
+  transition: transform 220ms ease, background 220ms ease;
 }
 
 .icon-svg {
@@ -695,6 +775,7 @@ h3 {
 .social-icon {
   width: 20px;
   height: 20px;
+  transition: transform 220ms ease;
 }
 
 .brand-whatsapp {
@@ -743,6 +824,12 @@ h3 {
 .booking-form {
   padding: 58px 32px 30px;
   border-radius: 34px;
+  transition: transform 240ms ease, box-shadow 240ms ease;
+}
+
+.booking-form:focus-within {
+  transform: translateY(-3px);
+  box-shadow: 0 30px 80px rgba(32, 78, 138, 0.18);
 }
 
 .form-subtitle {
@@ -758,6 +845,12 @@ h3 {
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.06em;
+  transition: color 180ms ease, transform 180ms ease;
+}
+
+.booking-form label:focus-within {
+  color: var(--green);
+  transform: translateX(2px);
 }
 
 .booking-form input,
@@ -771,6 +864,7 @@ h3 {
   font-size: 1rem;
   color: var(--text);
   background: #fff;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease, background 180ms ease;
 }
 
 .booking-form select:disabled {
@@ -784,6 +878,8 @@ h3 {
 .booking-form textarea:focus {
   outline: 2px solid rgba(63, 126, 74, 0.18);
   border-color: #93bc99;
+  box-shadow: 0 12px 26px rgba(47, 110, 203, 0.1);
+  transform: translateY(-1px);
 }
 
 .button-large {
@@ -836,6 +932,7 @@ h3 {
   color: #fff;
   background: var(--green);
   border: 0;
+  animation: softNudge 4s ease-in-out infinite;
 }
 
 .thankyou-page {
@@ -958,10 +1055,10 @@ h3 {
 
 .reveal {
   opacity: 0;
-  transform: translateY(26px);
+  transform: translateY(54px) scale(0.96);
   transition:
-    opacity 700ms cubic-bezier(0.22, 1, 0.36, 1),
-    transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 900ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 900ms cubic-bezier(0.16, 1, 0.3, 1);
   transition-delay: var(--delay, 0ms);
   will-change: opacity, transform;
 }
@@ -972,11 +1069,11 @@ h3 {
 }
 
 .reveal-pop {
-  transform: translateY(24px) scale(0.94);
+  transform: translateY(42px) scale(0.88);
 }
 
 .reveal-drop {
-  transform: translateY(-18px) scale(0.98);
+  transform: translateY(-38px) scale(0.94);
 }
 
 .rise {
@@ -1027,10 +1124,42 @@ h3 {
   }
 }
 
+@keyframes pageBloom {
+  0% {
+    opacity: 0;
+    transform: translateY(34px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes headerDrop {
+  0% {
+    opacity: 0;
+    transform: translateY(-28px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes softNudge {
+  0%,
+  100% {
+    box-shadow: 0 18px 28px rgba(47, 110, 203, 0.2);
+  }
+  50% {
+    box-shadow: 0 24px 42px rgba(47, 110, 203, 0.34);
+  }
+}
+
 @keyframes specialityFade {
   0% {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(24px);
   }
   100% {
     opacity: 1;
@@ -1041,11 +1170,38 @@ h3 {
 @keyframes specialityPop {
   0% {
     opacity: 0;
-    transform: translateY(18px) scale(0.95);
+    transform: translateY(34px) scale(0.86);
+  }
+  62% {
+    opacity: 1;
+    transform: translateY(-4px) scale(1.03);
   }
   100% {
     opacity: 1;
     transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes activeTabPulse {
+  0% {
+    transform: scale(0.96);
+  }
+  55% {
+    transform: scale(1.06);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
   }
 }
 
