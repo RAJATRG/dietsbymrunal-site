@@ -23,24 +23,6 @@ function requiredEnv(name) {
   return value;
 }
 
-// function assertRealResendConfig() {
-//   const apiKey = requiredEnv("RESEND_API_KEY");
-//   const from = requiredEnv("RESEND_FROM_EMAIL");
-//   const to = requiredEnv("RESEND_TO_EMAIL");
-//   console.log(apiKey);
-//   console.log(from)
-//   console.log(to)
-//   if (
-//     apiKey !== "re_N6HuARLq_KZEjSRh5hyqARDvMDrWfESLb" ||
-//     from !== "hello@dietsbymrunal.in" ||
-//     to !== "rajatgovekar@gmail.com"
-//   ) {
-//     throw new Error(
-//       "Resend is not configured yet. Replace the placeholder Resend values in the .env file."
-//     );
-//   }
-// }
-
 function escapeHtml(value) {
   return String(value)
     .replace(/&/g, "&amp;")
@@ -66,8 +48,6 @@ function buildConsultationText(payload) {
 }
 
 async function sendEmail(payload) {
-  // assertRealResendConfig();
-
   const requestBody = JSON.stringify({
     from: process.env.RESEND_FROM_LABEL
       ? `${process.env.RESEND_FROM_LABEL} <${requiredEnv("RESEND_FROM_EMAIL")}>`
@@ -161,6 +141,10 @@ app.post("/api/contact", async (req, res) => {
       error: error.message,
     });
   }
+});
+
+app.get("/programs", (req, res) => {
+  res.sendFile(path.join(__dirname, "programs.html"));
 });
 
 app.get(/.*/, (req, res) => {
